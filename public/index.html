@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Upload PDF and Preview</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <h1>Upload and Preview PDF</h1>
+
+        <form id="uploadForm">
+            <input type="file" name="pdfFile" accept="application/pdf" required />
+            <button type="submit">Upload PDF</button>
+        </form>
+
+        <hr>
+        <h2>PDF Preview:</h2>
+        <iframe id="pdfViewer"></iframe>
+
+        <script src="app.js"></script>
+    </body>
+</html>
