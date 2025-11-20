@@ -10,11 +10,38 @@
         <form id="uploadForm">
             <input type="file" name="pdfFile" accept="application/pdf" required />
             <button type="submit">Upload PDF</button>
-        </form>
+        <br><br>
+        <div id="settings">
+            <label>Color:</label>
+            <input type="radio" id="bw" name="color" value="bw">
+            <label for="bw">Black & White</label>
+            <input type="radio" id="color" name="color" value="color" checked>
+            <label for="color">Colored</label>
+            <br><br>
+
+            <label for="pages">Pages (e.g., 1-3, 5):</label>
+            <input type="text" id="pages" placeholder="Enter pages"  value ="1" required>
+            <br><br>
+
+            <label for="copies">Copies:</label>
+            <input type="number" id="copies" name="copies" min="1" max="10" value="1" required>
+            <br><br>
+
+            <label>Paper Size:</label>
+            <input type="radio" id="letter" name="paperSize" value="letter" checked>
+            <label for="letter">Letter(short)</label>
+            <input type="radio" id="legal" name="paperSize" value="legal">
+            <label for="legal">Legal(long)</label>
+            <br><br>
+        </div>
 
         <hr>
         <h2>PDF Preview:</h2>
-        <iframe id="pdfViewer"></iframe>
+        <div id="preview"></div>
+        <br><br>
+.
+        <button type="submit">Proceed</button>
+        <button type="cancel">Clear</button>
 
         <script src="app.js"></script>
     </body>
