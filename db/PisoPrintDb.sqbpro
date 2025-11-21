@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="PisoPrintDb.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="0"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1946"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="0" parent="0"/><expanded_item id="1" parent="0"/><expanded_item id="2" parent="0"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="Admins" custom_title="0" dock_id="1" table="4,6:mainAdmins"/><dock_state state="000000ff00000000fd0000000100000002000002480000020cfc0100000001fb000000160064006f0063006b00420072006f00770073006500310100000000000002480000011e00ffffff000002480000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings/></tab_browse><tab_sql><sql name="SQL 1*">CREATE TABLE Transactions (
+    Transaction_Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Date DATETIME NOT NULL,
+    Amount DOUBLE NOT NULL,
+    Color TEXT,
+    Pages INTEGER,
+    Copies INTEGER,
+    Paper_Size TEXT,
+    File_Path TEXT NOT NULL,
+    File_Size DOUBLE,
+    Status_Id INTEGER NOT NULL,
+    FOREIGN KEY (Status_Id) REFERENCES Status(Id)
+);
+CREATE TABLE Status (
+    Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Status_Name TEXT UNIQUE NOT NULL
+);
+CREATE TABLE Admins (
+    Admin_Id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Username TEXT UNIQUE NOT NULL,
+    Password_Hash TEXT NOT NULL
+);</sql><current_tab id="0"/></tab_sql></sqlb_project>

@@ -19,8 +19,16 @@
             <label for="color">Colored</label>
             <br><br>
 
-            <label for="pages">Pages (e.g., 1-3, 5):</label>
-            <input type="text" id="pages" placeholder="Enter pages"  value ="1" required>
+            <label for="pageMode">Pages:</label>
+            <select id="pageMode">
+                <option value="all" selected>All Pages</option>
+                <option value="odd">Odd Pages Only</option>
+                <option value="even">Even Pages Only</option>
+                <option value="custom">Custom</option>
+            </select>
+
+            <label for="pages">Custom pages</label>
+            <input type="text" id="pages" placeholder="e.g., 1-3, 5" disabled>
             <br><br>
 
             <label for="copies">Copies:</label>
@@ -40,7 +48,7 @@
         <div id="preview"></div>
         <br><br>
 .
-        <button type="submit">Proceed</button>
+        <button type="proceed">Proceed</button>
         <button type="cancel">Clear</button>
 
         <script src="app.js"></script>

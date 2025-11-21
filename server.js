@@ -13,6 +13,16 @@ const cacheDir = path.join(__dirname, 'cache');
 const letterCache = path.join(cacheDir, 'letter');
 const legalCache = path.join(cacheDir, 'legal');
 
+[letterCache, legalCache].forEach(d => {
+    if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
+});
+
+const clearCache = folder => {
+    fs.readdirSync(folder)
+        .filter(f => f.endsWith('.png'))
+        .forEach(f => fs.unlinkSync(path.join(folder, f)));
+};
+
 [uploadsDir, letterCache, legalCache].forEach(d => {
     if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
 });
@@ -75,15 +85,23 @@ app.post('/upload', async (req, res) => {
 
         const uploadedPath = path.join(uploadsDir, req.file.filename);
         const baseName = path.parse(req.file.filename).name;
-        // Generate shor & long versions of the PDF
+
+        // Clear old cached images for this file
+        clearCache(letterCache);
+        clearCache(legalCache);
+        // Get total pages
+        const existingBytes = await fsPromise.readFile(uploadedPath);
+        const pdfDoc = await PDFDocument.load(existingBytes);
+        const totalPages = pdfDoc.getPageCount();
+        // Generate short & long versions of the PDF
         const letterPDF = path.join(uploadsDir, baseName + "_letter.pdf");
         const legalPDF = path.join(uploadsDir, baseName + "_legal.pdf");
 
         await resizePDF(uploadedPath, letterPDF, 612, 792);
         await resizePDF(uploadedPath, legalPDF, 612, 1008);
 
-        const optsLetter = { format: 'png', out_dir: letterCache, out_prefix: baseName, page: null, dpi: 150 };
-        const optsLegal = { format: 'png', out_dir: legalCache, out_prefix: baseName, page: null, dpi: 150 };
+        //const optsLetter = { format: 'png', out_dir: letterCache, out_prefix: baseName, page: null, dpi: 150 };
+        //const optsLegal = { format: 'png', out_dir: legalCache, out_prefix: baseName, page: null, dpi: 150 };
 
         await Poppler.convert(letterPDF, {
             format: 'png',
@@ -111,7 +129,11 @@ app.post('/upload', async (req, res) => {
 
         fs.unlinkSync(uploadedPath);
 
-        res.json({ success: true, images: { letter: letterImages, legal: legalImages } });
+        res.json({ 
+            success: true, 
+            images: { letter: letterImages, legal: legalImages }, 
+            totalPages 
+        });
 
     } catch(err) {
         console.error(err);
