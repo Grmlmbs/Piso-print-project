@@ -7,6 +7,27 @@ const app = express();
 const { PDFDocument } = require("pdf-lib");
 const fsPromise = require("fs").promises;
 
+let lastUploadedBaseName = null;
+
+app.delete('/delete-last/:baseName', (req, res) => {
+    const baseName = req.params.baseName;
+
+    try {
+        [letterCache, legalCache].forEach(folder => {
+            fs.readdirSync(folder)
+                .filter(f => f.startsWith(baseName))
+                .forEach(f => fs.unlinkSync(path.join(folder, f)));
+        });
+        [path.join(uploadsDir, baseName + '_letter.pdf'), path.join(uploadsDir, baseName + '_legal.pdf')]
+            .forEach(file => {
+                if(fs.existsSync(file)) fs.unlinkSync(file);
+            });
+        res.json({ success: true });
+    } catch (err) {
+        console.error(err);
+        res.json({ success: false, message: err.message });
+    }
+});
 
 const uploadsDir = path.join(__dirname, 'uploads');
 const cacheDir = path.join(__dirname, 'cache');
@@ -86,6 +107,8 @@ app.post('/upload', async (req, res) => {
         const uploadedPath = path.join(uploadsDir, req.file.filename);
         const baseName = path.parse(req.file.filename).name;
 
+        lastUploadedBaseName = baseName;
+
         // Clear old cached images for this file
         clearCache(letterCache);
         clearCache(legalCache);
@@ -93,6 +116,20 @@ app.post('/upload', async (req, res) => {
         const existingBytes = await fsPromise.readFile(uploadedPath);
         const pdfDoc = await PDFDocument.load(existingBytes);
         const totalPages = pdfDoc.getPageCount();
+
+        const firstPage = pdfDoc.getPage(0);
+        const { width: origW, height: origH } = firstPage.getSize();
+
+        let originalSize = "";
+
+        if(origW === 612 && origH === 792) {
+            originalSize = "letter";
+        } else if ( origW === 612 && origH === 1008) {
+            originalSize = "legal";
+        } else {
+            // for non-standard sizes, pick letter(default)
+            originalSize = origH > 900 ? "legal" : "letter";
+        }
         // Generate short & long versions of the PDF
         const letterPDF = path.join(uploadsDir, baseName + "_letter.pdf");
         const legalPDF = path.join(uploadsDir, baseName + "_legal.pdf");
@@ -132,7 +169,9 @@ app.post('/upload', async (req, res) => {
         res.json({ 
             success: true, 
             images: { letter: letterImages, legal: legalImages }, 
-            totalPages 
+            totalPages,
+            originalSize,
+            baseName
         });
 
     } catch(err) {
