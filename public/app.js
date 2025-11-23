@@ -35,13 +35,13 @@ fileInput.addEventListener("change", () => {
             .then(data => console.log('Previous files deleted:', data))
             .catch(err => console.error(err));
 
-        uploadButton.disabled = false; // allow new upload
-        // Optionally clear preview if you want
-        // preview.innerHTML = "";
+        preview.innerHTML = "";
         totalPages = 0;
         allPagesImages = { letter: [], legal: [] };
         disabledInputs();
         updatePagesTextboxState();
+
+        uploadButton.disabled = false; // allow new upload
         lastUploadedBaseName = null;
     }
 });

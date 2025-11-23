@@ -6,6 +6,9 @@ const Poppler = require('pdf-poppler');
 const app = express();
 const { PDFDocument } = require("pdf-lib");
 const fsPromise = require("fs").promises;
+const db = require("./db");
+
+
 
 let lastUploadedBaseName = null;
 
@@ -177,6 +180,43 @@ app.post('/upload', async (req, res) => {
     } catch(err) {
         console.error(err);
         res.json({ success: false, message: err.message || 'Conversion failed' });
+    }
+});
+app.post('/transaction/create', (req, res) => {
+    try {
+        const {
+            Date,
+            Amount,
+            Color,
+            Pages,
+            Copies,
+            Paper_Size,
+            File_Path,
+            File_Size,
+            Status
+        } = req.body;
+        
+        const stmt = db.prepare(`
+            INSERT INTO Transactions
+            (Date, Amount, Color, Pages, Copies, Paper_Size, File_Path, File_Size, Status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `);
+
+        const result = stmt.run(
+            Date,
+            Amount,
+            Color,
+            Pages,
+            Copies,
+            Paper_Size,
+            File_Path,
+            File_Size,
+            Status
+        );
+        res.json({ success: true, id: result.lastInsertRowid });
+    } catch (error) {
+        console.error(error);
+        res.json({ success: false, message: error.message });
     }
 });
 
