@@ -1,30 +1,124 @@
+/* RESET */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
-}
-
-h1, h2 {
+    background: #f4f4f4;
     color: #333;
+    padding: 10px;
 }
 
-form {
+/* CONTAINER — SIDE BY SIDE ON LAPTOP/TABLET */
+.container {
+    max-width: 1200px;
+    max-height: 100%;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+
+    display: flex;
+    gap: 20px;
+}
+
+/* LEFT SIDE */
+.preview-container {
+    flex: 1.3;
+}
+
+/* RIGHT SIDE */
+.form-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+/* CENTER HEADINGS INSIDE FORM */
+.form-container h1,
+.preview-container h2 {
+    text-align: left;
     margin-bottom: 20px;
 }
 
-input[type="file"] {
-    margin-right: 10px;
+/* FORM LAYOUT */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
+
+#settings {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* INPUTS */
+input[type="file"], select, input[type="number"], input[type="text"] {
+    flex: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#customPageWrapper {
+    grid-column: 2 / 3; /* start from column 2 (input column) */
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition:
+        max-height 0.35s ease,
+        opacity 0.35s ease,
+        transform 0.35s ease;
+}
+#customPageWrapper.show {
+    max-height: 80px;
+    opacity: 1;
+    transform: translateY(0);
+}
+/* BUTTONS */
 button {
-    padding: 5px 15px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007BFF;
+    color: #fff;
     cursor: pointer;
+    transition: 0.3s;
 }
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.buttons {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+#clearBtn, #cancelBtn{
+    background-color: rgb(241, 241, 241);
+    border: 1px solid #0056b3;
+    color: black;
+}
+#clearBtn:hover {
+    background-color: white;
+}
+/* PREVIEW BOX */
 #preview {
     width: 100%;
-    height: 400px;
+    height: 600px;
     border: 1px solid #ccc;
     padding: 10px;
     overflow-y: auto;
-    overflow-x: hidden;
     background-color: #f9f9f9;
 }
 
@@ -33,7 +127,99 @@ button {
     margin-bottom: 10px;
     max-width: 100%;
 }
+
 .bw {
     filter: grayscale(100%);
 }
 
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column; /* STACK ON MOBILE */
+    }
+}
+
+@media (max-width: 480px) {
+    h1, h2 {
+        font-size: 1.4em;
+    }
+    #preview {
+        height: 500px;
+    }
+    button {
+        width: 100%;
+    }
+}
+
+/* SETTINGS TWO-COLUMN GRID */
+#settings {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 12px 15px; /* row gap / column gap */
+    align-items: center;
+    width: 100%;
+}
+.setting-row {
+    display: contents; /* keeps the grid alignment without extra divs */
+}
+/* Make selects and inputs look consistent */
+#settings select,
+#settings input[type="number"],
+#settings input[type="text"] {
+    width: 100%;
+    padding: 7px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* Mobile → stack into one column */
+@media (max-width: 600px) {
+    #settings {
+        grid-template-columns: 1fr;
+    }
+}
+/* --- Responsive button positioning --- */
+@media (min-width: 601px) {
+    /* Desktop / tablet: bottom-right corner of form */
+    .buttons {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        flex-direction: row;
+        justify-content: flex-end;
+        width: auto;
+    }
+}
+
+@media (max-width: 900px) {
+    /* Mobile: stack normally under inputs */
+    .buttons{
+        position: static;
+        flex-direction: row;
+        justify-content: flex-end;
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end; /* right align */
+    margin-top: 15px;          /* spacing from inputs */
+    flex-wrap: wrap;            /* prevent overflow */
+}
+
+.buttons button {
+    flex: 0 1 auto;             /* don’t force 100% unless mobile */
+}
+
+@media (max-width: 100%) {
+    #priceBtns{
+        flex-direction: column; /* stack buttons */
+        width: 100%;            /* take container width */
+    }
+    .buttons button {
+        width: 100%;            /* fill container width */
+    }
+}

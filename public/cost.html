@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Printing Cost</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <!-- LEFT SIDE: Cost Info -->
+        <div class="preview-container">
+            <h1>Document Price</h1>
+
+            <div id="box">
+                <br>
+                <h1><b>Price: ₱</b><span id="cost">Calculating...</span></h1>
+                <br>
+                <h3>Details:</h3>
+                <hr>
+                <p><b>Color:</b> <span id="color"></span></p>
+                <p><b>Pages Selected:</b> <span id="pages"></span></p>
+                <p><b>Copies:</b> <span id="copies"></span></p>
+                <p><b>Paper Size:</b> <span id="paper"></span></p>
+                <br>
+                <hr>
+
+                <label for="payment">Enter Payment:</label><br>
+                <input type="number" id="payment" min="0"><br>
+
+                <p id="status"></p>
+
+                <div class="buttons" id="priceBtns">
+                    <button id="printBtn">Print</button>
+                    <button id="cancelBtn">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="cost.js"></script>
+</body>
+</html>
